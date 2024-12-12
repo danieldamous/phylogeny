@@ -9,8 +9,7 @@ for gb in $(ls *file_gb*); do
     deposit=$(grep "LOCUS" $gb  | awk '{print $8}')
     organism=$(grep -i "/organism" $gb | cut -f 2 -d "=" | sed 's:"::g' | sed 's: :_:g')
     host=$(grep "/host" $gb | cut -f2 -d "=" | sed 's:"::g' | sed 's: :_:g')
-    echo ">$accession|$organism|$host|$geo_loc|$deposit""$sequence" | sed 's:||:|Not_found|:g' | tee -a dataset_gb.fasta
+    echo ">$accession|$organism|$host|$geo_loc|$deposit""$sequence" | sed 's:||:|Not_found|:g' |  sed "s:>|.*$::g" | awk 'NF > 0' | tee -a dataset_gb.fasta
 done
-sed "s:>|.*$::g" *.fasta | awk 'NF > 0' # remove os espaços vazios
 mkdir files_genbank ; mv *.gb files_genbank
 rm -rf file_*
